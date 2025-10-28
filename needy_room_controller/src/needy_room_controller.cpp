@@ -15,7 +15,8 @@
 #include "Button.h"
 #include "Adafruit_BME280.h"
 #include "neopixel.h"
-#include "colors.h"
+#include "hue.h"
+
 SYSTEM_MODE(MANUAL);
 
 const int OLED_RESET=-1;
@@ -27,13 +28,16 @@ Button Gbu(D15);
 Button Rbu(D16);
 Button Bbu(D17);
 
-const int MYWEMO = 3;
+const int MYWEMO0 = 5;
+const int MYWEMO1 = 0;
 const int pd = A1;
 const int pnum = 12;
+const int encbutt0 = D6;
+const int encbutt1 = D7;
 int status;
-int pos1;
 int pos2;
 int x;
+
 int z;
 
 bool butt1;
@@ -46,6 +50,7 @@ float humidRH;
 float tempF;
 float inHg;
 float pascal = 3386.39;
+float pos1 = tempF;
 
 String pdval;
 
@@ -158,9 +163,6 @@ void setup() {
 
 
 void loop() {
-  if (Gbu.isClicked()){
-    butt1 = !butt1;
-  }
   z = analogRead(pd);
   Serial.printf("%i\n",z);
   for ( x = 0 ; x <= 11 ; x++){
@@ -168,16 +170,29 @@ void loop() {
     pixle.show();
   }
   pos1 = enc1.read();
-  pos2 = enc2.read();
+  if (pos1 <= 68){
+    pos1 = 68;
+    enc1.write(68);
+  }
+  setHue(1,true,HueViolet,127,255);
   Serial.printf("position of enc1 %i\n position of enc2 %i\n",pos1,pos2);
+  if (Gbu.isClicked()){
+    butt1 = !butt1;
+  }
   if (butt1){
-  wemoWrite(MYWEMO,HIGH);
+  wemoWrite(MYWEMO0,HIGH);
   }
   if(!butt1){
-    wemoWrite(MYWEMO,LOW);
+    wemoWrite(MYWEMO0,LOW);
   }
   if (Rbu.isClicked()){
-    Serial.printf("button clicked %i\n",Rbu);
+    butt2 = !butt2; 
+  }
+  if (butt2){
+    wemoWrite(MYWEMO1,HIGH);
+  }
+  if (!butt2){
+    wemoWrite(MYWEMO1,LOW);
   }
   if (Bbu.isClicked()){
     Serial.printf("button clicked %i\n",Bbu);
