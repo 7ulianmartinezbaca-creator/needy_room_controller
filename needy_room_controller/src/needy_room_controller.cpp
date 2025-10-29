@@ -16,6 +16,7 @@
 #include "Adafruit_BME280.h"
 #include "neopixel.h"
 #include "hue.h"
+#include "Colors.h"
 
 SYSTEM_MODE(MANUAL);
 
@@ -156,7 +157,7 @@ void setup() {
   display.clearDisplay();
 
   pixle.begin();
-  pixle.setBrightness(100);
+  pixle.setBrightness(150);
   pixle.show();
 
   pinMode(pd,INPUT);
@@ -164,60 +165,78 @@ void setup() {
 
 
 void loop() {
-  z = analogRead(pd);
-  Serial.printf("%i\n",z);
-  for ( x = 0 ; x <= 11 ; x++){
-    pixle.setPixelColor(x,255,0,0);
-    pixle.show();
-  }
-  pos1 = enc1.read();
-  if (pos1 >= 255){
-    pos1 = 255;
-    enc1.write(255);
-  }
-  if (pos1<=0){
-    pos1 = 0;
-    enc1.write(0);
-  }
-  Serial.printf("position of enc1 %i\n position of enc2 %i\n",pos1,pos2);
-  if (Gbu.isClicked()){
-    butt1 = !butt1;
-  }
-  if (butt1){
-  wemoWrite(MYWEMO0,HIGH);
-  }
-  if(!butt1){
-    wemoWrite(MYWEMO0,LOW);
-  }
-  if (Rbu.isClicked()){
-    butt2 = !butt2; 
-  }
-  if (butt2){
-    wemoWrite(MYWEMO1,HIGH);
-  }
-  if (!butt2){
-    wemoWrite(MYWEMO1,LOW);
-  }
-  if (encb0.isClicked()){
-    encs0 = !encs0;
-  }
-  if (encs0){
-    setHue(1,true,HueViolet,pos1,255);
-  }
-  if (!encs0){
-    setHue(1,false,HueViolet,0,255);
-  }
   if (Bbu.isClicked()){
-    Serial.printf("button clicked %i\n",Bbu);
+    butt3 = !butt3;
   }
+  if(butt3){
+    for ( x = 0 ; x <= 11 ; x++){
+      pixle.setPixelColor(x,violet);
+      pixle.show();
+    }
+    pos1 = enc1.read();
+    if (pos1 >= 255){
+      pos1 = 255;
+      enc1.write(255);
+    }
+    if (pos1<=0){
+      pos1 = 0;
+      enc1.write(0);
+    }
+    if (Gbu.isClicked()){
+      butt1 = !butt1;
+    }
+    if (butt1){
+      wemoWrite(MYWEMO0,HIGH);
+    }
+    if(!butt1){
+      wemoWrite(MYWEMO0,LOW);
+    }
+    if (Rbu.isClicked()){
+      butt2 = !butt2; 
+    }
+    if (butt2){
+      wemoWrite(MYWEMO1,HIGH);
+    }
+    if (!butt2){
+      wemoWrite(MYWEMO1,LOW);
+    }
+    if (encb0.isClicked()){
+      encs0 = !encs0;
+    }
+    if (encs0){
+      setHue(1,true,HueViolet,pos1,255);
+    }
+    if (!encs0){
+      setHue(1,false,HueViolet,0,255);
+    }
+    if (encb1.isClicked()){
+      encs1 = !encs1;
+    }
+    if (encs1){
+      setHue(2,true,HueViolet,pos1,255);
+      setHue(3,true,HueViolet,pos1,255);
+      setHue(4,true,HueViolet,pos1,255);
+      setHue(5,true,HueViolet,pos1,255);
+    }
+    if (!encs1){
+      setHue(2,false,HueViolet,pos1,255);
+      setHue(3,false,HueViolet,pos1,255);
+      setHue(4,false,HueViolet,pos1,255);
+      setHue(5,false,HueViolet,pos1,255);
+    }
+  }
+  //Serial.printf("position of enc1 %i\n position of enc2 %i\n",pos1,pos2);
   tempC = bme.readTemperature();
   pressPA = bme.readPressure();
   humidRH = bme.readHumidity();
   inHg = pressPA * (1/pascal);
   tempF = 9/5.0 * tempC + 32;
+  
   display.setCursor(0,0);
   display.clearDisplay();
-  display.printf("Temp %0.2f\nPressure\nHumity %0.2f\n",tempF,inHg,humidRH);
-  //Serial.printf("Temp %0.2f\nPressure %0.2f\nHumity %0.2f\n",tempF,inHg,humidRH);
+  display.printf("Temp %0.2f\nSet to %i\n",tempF,pos2);
   display.display();
+  z = analogRead(pd);
+  Serial.printf("%i\n",z);
+  if (pd = )
 }
