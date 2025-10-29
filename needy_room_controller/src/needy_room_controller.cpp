@@ -22,24 +22,26 @@ SYSTEM_MODE(MANUAL);
 const int OLED_RESET=-1;
 
 Encoder enc1(D8,D9);
-Encoder enc2(D18,D19);
+Encoder enc0(D18,D19);
 
 Button Gbu(D15);
 Button Rbu(D16);
 Button Bbu(D17);
+Button encb0(D6);
+Button encb1(D7);
 
 const int MYWEMO0 = 5;
 const int MYWEMO1 = 0;
 const int pd = A1;
 const int pnum = 12;
-const int encbutt0 = D6;
-const int encbutt1 = D7;
 int status;
+int pos1;
 int pos2;
 int x;
-
 int z;
 
+bool encs0;
+bool encs1;
 bool butt1;
 bool butt2;
 bool butt3;
@@ -50,7 +52,6 @@ float humidRH;
 float tempF;
 float inHg;
 float pascal = 3386.39;
-float pos1 = tempF;
 
 String pdval;
 
@@ -170,11 +171,14 @@ void loop() {
     pixle.show();
   }
   pos1 = enc1.read();
-  if (pos1 <= 68){
-    pos1 = 68;
-    enc1.write(68);
+  if (pos1 >= 255){
+    pos1 = 255;
+    enc1.write(255);
   }
-  setHue(1,true,HueViolet,127,255);
+  if (pos1<=0){
+    pos1 = 0;
+    enc1.write(0);
+  }
   Serial.printf("position of enc1 %i\n position of enc2 %i\n",pos1,pos2);
   if (Gbu.isClicked()){
     butt1 = !butt1;
@@ -194,6 +198,15 @@ void loop() {
   if (!butt2){
     wemoWrite(MYWEMO1,LOW);
   }
+  if (encb0.isClicked()){
+    encs0 = !encs0;
+  }
+  if (encs0){
+    setHue(1,true,HueViolet,pos1,255);
+  }
+  if (!encs0){
+    setHue(1,false,HueViolet,0,255);
+  }
   if (Bbu.isClicked()){
     Serial.printf("button clicked %i\n",Bbu);
   }
@@ -205,6 +218,6 @@ void loop() {
   display.setCursor(0,0);
   display.clearDisplay();
   display.printf("Temp %0.2f\nPressure\nHumity %0.2f\n",tempF,inHg,humidRH);
-  Serial.printf("Temp %0.2f\nPressure %0.2f\nHumity %0.2f\n",tempF,inHg,humidRH);
+  //Serial.printf("Temp %0.2f\nPressure %0.2f\nHumity %0.2f\n",tempF,inHg,humidRH);
   display.display();
 }
