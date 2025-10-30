@@ -238,5 +238,23 @@ void loop() {
   display.display();
   z = analogRead(pd);
   Serial.printf("%i\n",z);
-  if (pd = )
+  if (!butt3){
+    if (pd <= 2000){
+      setHue(2,true,HueViolet,pos1,255);
+      setHue(3,true,HueViolet,pos1,255);
+      setHue(4,true,HueViolet,pos1,255);
+      setHue(5,true,HueViolet,pos1,255);
+    }
+    if (pd >= 2000){
+      setHue(2,false,HueViolet,pos1,255);
+      setHue(3,false,HueViolet,pos1,255);
+      setHue(4,false,HueViolet,pos1,255);
+      setHue(5,false,HueViolet,pos1,255);
+    }
+    if (tempF >= pos2){
+      //wemoWrite(MYWEMO1,HIGH);
+    }
+    if (tempF <= pos2){
+    }
+  }
 }
